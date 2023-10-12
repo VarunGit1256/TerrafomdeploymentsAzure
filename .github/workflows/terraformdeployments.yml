@@ -1,4 +1,4 @@
-name: Terraform Deployments
+name: BuildSprint96
 
 on:
   workflow_dispatch:
@@ -6,12 +6,11 @@ on:
       version:
         description: 'Initial version'
         required: true
-        default: '8.0.100'  # Set your initial version here
+        default: '8.0.96'  # Set your initial version here
 
 jobs:
   build:
-    runs-on: windows-latest
-
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -20,20 +19,24 @@ jobs:
       - name: Set up Environment Variables
         run: |
           echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
       - name: Set Tag
         id: version
         run: |
           echo "::set-output name=tag::${{ env.VERSION }}"
           echo "Setting tag as ${{ env.VERSION }}"
+
       - name: Set up Git
         run: |
-          git config --global user.email "varunteja4393@gmail.com"
-          git config --global user.name "varunGit1256"
+            git config --global user.email "varunteja4393@gmail.com.com"
+            git config --global user.name "varunGit1256"
+
+
       - name: Push Tag
         run: |
-          $tag_name="${{ steps.version.outputs.tag }}"
-          git tag -a $tag_name -m "Release $tag_name"
-          git push origin $tag_name
+         tag_name="${{ steps.version.outputs.tag }}"
+         git tag -a $tag_name -m "Release $tag_name"
+         git push origin $tag_name
 
 
       - name: Copy Files
