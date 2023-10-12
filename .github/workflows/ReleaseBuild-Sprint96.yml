@@ -1,0 +1,57 @@
+name: Build and Publish Artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Initial version'
+        required: true
+        default: '8.0.96'  # Set your initial version here
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Environment Variables
+        run: |
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Set Tag
+        id: version
+        run: |
+          echo "::set-output name=tag::${{ env.VERSION }}"
+          echo "Setting tag as ${{ env.VERSION }}"
+
+      - name: Set Artifact Name
+        id: artifact_name
+        run: |
+          echo "::set-output name=name::ReleaseBuild-Sprint${{ env.VERSION }}"
+
+      - name: Set up Git
+        run: |
+            git config --global user.email "varunteja4393@gmail.com.com"
+            git config --global user.name "varunGit1256"
+
+      - name: Push Tag
+        run: |
+         tag_name="${{ steps.version.outputs.tag }}"
+         git tag -a $tag_name -m "Release $tag_name"
+         git push origin $tag_name
+
+      - name: Create artifact directory
+        run: mkdir ${{ steps.artifact_name.outputs.name }}
+
+      - name: Copy files to artifact directory
+        run: |
+         shopt -s extglob
+         mv !(${{ steps.artifact_name.outputs.name }}) ${{ steps.artifact_name.outputs.name }}/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+           name: ${{ steps.artifact_name.outputs.name }}
+           path: ${{ steps.artifact_name.outputs.name }}
