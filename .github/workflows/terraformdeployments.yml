@@ -39,13 +39,10 @@ jobs:
          git push origin $tag_name
 
 
-      - name: Copy Files
+      - name: Copy files to artifact directory
         run: |
-          # Create a directory for the artifact
-          mkdir -p my_artifact
-
-          # Copy the files you want to include in the artifact
-          cp -r path/to/source/* my_artifact/
+          mkdir my_artifact
+          cp -r * my_artifact/
 
       - name: Publish Artifact
         uses: actions/upload-artifact@v2
