@@ -1,0 +1,54 @@
+name: Terraform Deployments
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Initial version'
+        required: true
+        default: '8.0.100'  # Set your initial version here
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Environment Variables
+        run: |
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+      - name: Set Tag
+        id: version
+        run: |
+          echo "::set-output name=tag::${{ env.VERSION }}"
+          echo "Setting tag as ${{ env.VERSION }}"
+      - name: Set up Git
+        run: |
+          git config --global user.email "varunteja4393@gmail.com"
+          git config --global user.name "varunGit1256"
+      - name: Push Tag
+        run: |
+          $tag_name="${{ steps.version.outputs.tag }}"
+          git tag -a $tag_name -m "Release $tag_name"
+          git push origin $tag_name
+
+
+      - name: Copy Files
+        run: |
+          # Create a directory for the artifact
+          mkdir -p my_artifact
+
+          # Copy the files you want to include in the artifact
+          cp -r path/to/source/* my_artifact/
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact  # Customize the artifact name
+          path: my_artifact   # Provide the path to your copied files
+
+
+
