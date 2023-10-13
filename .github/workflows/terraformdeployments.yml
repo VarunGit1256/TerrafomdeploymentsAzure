@@ -47,15 +47,27 @@ jobs:
          shopt -s extglob
          mv !(artifact) artifact/
     
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-           name: BuildSprint400
-           path: artifact
+     # - name: Upload artifact
+      #  uses: actions/upload-artifact@v2
+       # with:
+        #   name: BuildSprint400
+         #  path: artifact
 
-      - name: List Artifact Contents
+      - name: Upload Artifact
         run: |
-          ls artifact
+         curl \
+         -X POST \
+         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+         -H "Content-Type: application/zip" \
+         --data-binary @artifact.zip \
+         "https://uploads.github.com/repos/${{ github.repository }}/actions/artifacts/${{ github.run_id }}/zip"
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      #- name: List Artifact Contents
+       # run: |
+        #  ls artifact
 
 
 
