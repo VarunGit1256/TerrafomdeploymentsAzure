@@ -1,0 +1,23 @@
+name: Deployment to UAT
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: my_artifact  # Name of the artifact defined in the build pipeline
+
+      # Add deployment steps specific to UAT here
