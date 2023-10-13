@@ -45,5 +45,5 @@ jobs:
       - name: Apply Terraform
         run: terraform apply -auto-approve
 
-      # Add additional steps for configuring and using the storage account as needed
+      # Add additional steps for configuring and using the storage account as neededd
 
