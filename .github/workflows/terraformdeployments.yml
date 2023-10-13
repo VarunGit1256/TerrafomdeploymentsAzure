@@ -53,6 +53,11 @@ jobs:
            name: BuildSprint400
            path: artifact
 
+      - name: List Artifact Contents
+        run: |
+          ls artifact
+
+
 
 
 
