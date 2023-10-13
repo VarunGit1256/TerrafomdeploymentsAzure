@@ -15,11 +15,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      #- name: Download Artifact
+       # uses: actions/download-artifact@v2
+        #with:
+         # name: BuildSprint400  # Name of the artifact defined in the build pipeline
+          #path: artifact
+
       - name: Download Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: BuildSprint400  # Name of the artifact defined in the build pipeline
-          path: artifact
+        run: |
+         curl -LJO \
+         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+         "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/my_artifact"
+
 
       - name: Set up Environment Variables
         run: |
