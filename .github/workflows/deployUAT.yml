@@ -15,6 +15,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Check if Version Exists
+        run: |
+          # Define the version to deploy
+          deploy_version=${{ github.event.inputs.version }}
+
+          # List available artifacts
+          available_artifacts=$(ls my_artifact)
+
+          # Check if the specified version exists in the artifacts
+          if echo "${available_artifacts}" | grep -q "${deploy_version}"; then
+            echo "Found artifact for version ${deploy_version}. Proceeding with deployment."
+          else
+            echo "No artifact found for version ${deploy_version}. Deployment aborted."
+            exit 1
+          fi
+
+      # Add the rest of your deployment steps here
+
+
       #- name: Download Artifact
        # uses: actions/download-artifact@v2
         #with:
