@@ -19,6 +19,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: BuildSprint400  # Name of the artifact defined in the build pipeline
+          path: artifact
 
       - name: Set up Environment Variables
         run: |
