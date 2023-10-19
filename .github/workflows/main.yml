@@ -15,19 +15,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Check if Version Exists
-        run: |
+      #- name: Check if Version Exists
+       # run: |
           # Define the version to deploy
-          deploy_version=${{ github.event.inputs.version }}
+          #deploy_version=${{ github.event.inputs.version }}
           # List available artifacts
-          available_artifacts=$(ls my_artifact)
+         # available_artifacts=$(ls my_artifact)
           # Check if the specified version exists in the artifacts
-          if echo "${available_artifacts}" | grep -q "${deploy_version}"; then
-            echo "Found artifact for version ${deploy_version}. Proceeding with deployment."
-          else
-            echo "No artifact found for version ${deploy_version}. Deployment aborted."
-            exit 1
-          fi
+         # if echo "${available_artifacts}" | grep -q "${deploy_version}"; then
+          #  echo "Found artifact for version ${deploy_version}. Proceeding with deployment."
+         # else
+          #  echo "No artifact found for version ${deploy_version}. Deployment aborted."
+          #  exit 1
+          #fi
       # Add the rest of your deployment steps here
 
 
@@ -41,3 +41,5 @@ jobs:
         run: |
           Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/my_artifact" -Headers @{Authorization = "token ${{ secrets.GITHUB_TOKEN }}"} -OutFile "C:\Deployments\my_artifact.zip"
 
+      - name: Unzip Artifact
+        run: Expand-Archive -Path "C:\Deployments\my_artifact.zip" -DestinationPath "C:\Deployments\my_artifact"
