@@ -39,6 +39,8 @@ jobs:
 
       - name: Download Artifact
         run: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
           Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/my_artifact" -Headers @{Authorization = "token ${{ secrets.GITHUB_TOKEN }}"} -OutFile "C:\Deployments\my_artifact.zip"
 
       - name: Unzip Artifact
