@@ -1,0 +1,43 @@
+name: Deployment to UAT
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Check if Version Exists
+        run: |
+          # Define the version to deploy
+          deploy_version=${{ github.event.inputs.version }}
+          # List available artifacts
+          available_artifacts=$(ls my_artifact)
+          # Check if the specified version exists in the artifacts
+          if echo "${available_artifacts}" | grep -q "${deploy_version}"; then
+            echo "Found artifact for version ${deploy_version}. Proceeding with deployment."
+          else
+            echo "No artifact found for version ${deploy_version}. Deployment aborted."
+            exit 1
+          fi
+      # Add the rest of your deployment steps here
+
+
+      #- name: Download Artifact
+       # uses: actions/download-artifact@v2
+        #with:
+         # name: BuildSprint400  # Name of the artifact defined in the build pipeline
+          #path: artifact
+
+      - name: Download Artifact
+        run: |
+          Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/my_artifact" -Headers @{Authorization = "token ${{ secrets.GITHUB_TOKEN }}"} -OutFile "C:\Deployments\my_artifact.zip"
+
